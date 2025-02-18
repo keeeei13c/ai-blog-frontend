@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-merriweather);
+}
+
+body {
+  @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100;
+}
+
+.prose {
+  @apply max-w-none;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  @apply font-serif font-bold text-gray-900 dark:text-gray-100;
+}
+
+.prose h1 {
+  @apply text-4xl md:text-5xl mb-8;
+}
+
+.prose h2 {
+  @apply text-3xl md:text-4xl mb-6;
+}
+
+.prose h3 {
+  @apply text-2xl md:text-3xl mb-4;
+}
+
+.prose p {
+  @apply text-lg leading-relaxed mb-6 text-gray-700 dark:text-gray-300;
+}
+
+.prose code {
+  @apply px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded font-mono text-sm;
+}
+
+.prose pre {
+  @apply p-4 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-x-auto;
+}
+
+.prose blockquote {
+  @apply pl-4 border-l-4 border-gray-300 dark:border-gray-700 italic;
+}
+
+.prose ul, .prose ol {
+  @apply my-6 ml-6;
+}
+
+.prose li {
+  @apply mb-2;
+}
+
+.prose img {
+  @apply rounded-lg shadow-lg my-8;
+}
+
+.prose hr {
+  @apply my-8 border-gray-200 dark:border-gray-800;
+}
+
+.prose a {
+  @apply text-blue-600 dark:text-blue-400 hover:underline;
+}
+
+.prose table {
+  @apply w-full my-8 border-collapse;
+}
+
+.prose th, .prose td {
+  @apply border border-gray-200 dark:border-gray-800 px-4 py-2;
+}
+
+.prose th {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
