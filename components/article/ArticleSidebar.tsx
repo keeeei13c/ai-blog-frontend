@@ -1,18 +1,26 @@
 import { Card, Text, Group } from '@mantine/core';
 import { Share2, Bookmark } from 'lucide-react';
-import { TableOfContents } from './TableOfContents';
-import { TableOfContentsItem } from '@/types/article';
-import { useBookmark } from '@/hooks/article/useBookmark';
-import { useShareArticle } from '@/hooks/article/useShareArticle';
+import { useState } from 'react';
+import { TableOfContentsItem } from './TableOfContentsItem';
+import { TableOfContentsItem as TocItem } from '@/types/article';
 
 interface ArticleSidebarProps {
-  tocItems: TableOfContentsItem[];
-  activeHeading?: string;
+  headings: TocItem[];
 }
 
-export function ArticleSidebar({ tocItems, activeHeading }: ArticleSidebarProps) {
-  const { isBookmarked, toggleBookmark } = useBookmark();
-  const { shareSuccess, handleShare } = useShareArticle();
+export function ArticleSidebar({ headings }: ArticleSidebarProps) {
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [shareSuccess, setShareSuccess] = useState(false);
+  
+  const handleBookmark = () => {
+    setIsBookmarked(!isBookmarked);
+  };
+  
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setShareSuccess(true);
+    setTimeout(() => setShareSuccess(false), 2000);
+  };
   
   return (
     <aside className="hidden lg:block w-64">
@@ -27,7 +35,7 @@ export function ArticleSidebar({ tocItems, activeHeading }: ArticleSidebarProps)
               <Share2 size={20} className={shareSuccess ? "text-green-500" : ""} />
             </button>
             <button
-              onClick={toggleBookmark}
+              onClick={handleBookmark}
               className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               aria-label={isBookmarked ? "ブックマーク済み" : "ブックマークする"}
             >
@@ -43,7 +51,15 @@ export function ArticleSidebar({ tocItems, activeHeading }: ArticleSidebarProps)
             目次
           </Text>
           
-          <TableOfContents items={tocItems} activeId={activeHeading} />
+          <nav className="space-y-1">
+            {headings.map((heading, index) => (
+              <TableOfContentsItem 
+                key={index}
+                text={heading.text} 
+                href={heading.href} 
+              />
+            ))}
+          </nav>
         </Card>
       </div>
     </aside>

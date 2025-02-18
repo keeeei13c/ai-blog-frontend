@@ -1,25 +1,54 @@
 'use client';
 
 import { Container } from '@mantine/core';
-import { Article } from '@/types/article';
+import { useState, useEffect } from 'react';
 import { ArticleHeader } from './ArticleHeader';
 import { ArticleContent } from './ArticleContent';
 import { ArticleSidebar } from './ArticleSidebar';
 import { RelatedArticles } from './RelatedArticles';
-import { useTableOfContents } from '@/hooks/article/useTableOfContents';
+import { Article, TableOfContentsItem } from '@/types/article';
 
 interface ArticlePageProps {
   article: Article;
 }
 
 export function ArticlePage({ article }: ArticlePageProps) {
-  const { tocItems, activeHeading } = useTableOfContents(article.content);
+  const [headings, setHeadings] = useState<TableOfContentsItem[]>([]);
+  
+  // 記事内容から見出しを抽出
+  useEffect(() => {
+    const extractHeadings = () => {
+      // マークダウンから見出しを抽出する簡易的な実装
+      const lines = article.content.split('\n');
+      const headingPattern = /^##?\s+(.+)$/;
+      const result: TableOfContentsItem[] = [];
+      
+      lines.forEach(line => {
+        const match = line.match(headingPattern);
+        if (match) {
+          const text = match[1];
+          const href = `#${text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')}`;
+          result.push({ text, href });
+        }
+      });
+      
+      return result;
+    };
+    
+    setHeadings(extractHeadings());
+  }, [article.content]);
 
   return (
     <main className="py-16">
       <Container size="xl">
         {/* 記事ヘッダー */}
-        <ArticleHeader article={article} />
+        <ArticleHeader 
+          title={article.title}
+          category={article.category}
+          date={article.date}
+          readTime={article.readTime}
+          image={article.image}
+        />
 
         {/* 記事コンテンツエリア */}
         <div className="flex gap-8">
@@ -30,7 +59,7 @@ export function ArticlePage({ article }: ArticlePageProps) {
           </div>
 
           {/* サイドバー */}
-          <ArticleSidebar tocItems={tocItems} activeHeading={activeHeading} />
+          <ArticleSidebar headings={headings} />
         </div>
       </Container>
     </main>

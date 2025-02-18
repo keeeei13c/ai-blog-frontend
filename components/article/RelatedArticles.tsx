@@ -20,17 +20,17 @@ export function RelatedArticles({ articles }: RelatedArticlesProps) {
             radius="md"
             className="hover:shadow-md transition-shadow"
           >
-            <Group noWrap align="flex-start">
+            <Group align="flex-start">
               <div>
                 <Badge size="sm" color="blue" className="mb-2">
                   {article.category}
                 </Badge>
-                <Text weight={500} size="lg" lineClamp={2}>
+                <Text fw={500} size="lg" lineClamp={2}>
                   {article.title}
                 </Text>
                 <Text 
                   component="a"
-                  href={`/article/${article.slug || article.id}`}
+                  href={`/article/${article.id}`}
                   size="sm"
                   className="text-blue-500 hover:underline mt-2 inline-block"
                 >

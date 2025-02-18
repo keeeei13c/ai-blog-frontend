@@ -1,14 +1,15 @@
 import { Title, Text, Badge, Group, Image } from '@mantine/core';
 import { Clock, Calendar } from 'lucide-react';
-import { Article } from '@/types/article';
 
 interface ArticleHeaderProps {
-  article: Article;
+  title: string;
+  category: string;
+  date: string;
+  readTime: string;
+  image: string;
 }
 
-export function ArticleHeader({ article }: ArticleHeaderProps) {
-  const { title, category, date, readTime, image } = article;
-
+export function ArticleHeader({ title, category, date, readTime, image }: ArticleHeaderProps) {
   return (
     <div className="max-w-3xl mx-auto mb-12">
       <div className="flex justify-between items-center mb-4">
