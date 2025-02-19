@@ -1,7 +1,7 @@
 // services/api.ts
 import { Article, RelatedArticle } from '@/types/article';
 
-export const API_BASE_URL = 'https://my-hono-api.hajime-kei2000.workers.dev';
+export const API_BASE_URL = 'https://edge-scribe.hajime-kei2000.workers.dev';
 
 // 記事一覧を取得する関数
 export async function fetchArticles(): Promise<Article[]> {
