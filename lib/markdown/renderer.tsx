@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 interface RendererProps {
   node?: any;
@@ -76,4 +77,75 @@ export const markdownRenderers = {
     const slug = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
     return <h3 id={slug} className="mt-5 mb-2 text-xl font-semibold" {...props}>{children}</h3>;
   },
+  
+  // 段落
+  p({node, ...props}: RendererProps) {
+    return <p className="my-4 leading-relaxed" {...props} />;
+  },
+  
+  // コードブロック
+  code({node, inline, className, children, ...props}: RendererProps & { inline?: boolean, className?: string }) {
+    const match = /language-(\w+)/.exec(className || '');
+    const language = match ? match[1] : '';
+    
+    if (!inline) {
+      return (
+        <pre className={`bg-gray-100 dark:bg-gray-800 p-4 rounded-md overflow-x-auto my-6 ${language ? `language-${language}` : ''}`}>
+          <code className={className} {...props}>{children}</code>
+        </pre>
+      );
+    }
+    
+    return (
+      <code className="bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
+        {children}
+      </code>
+    );
+  },
+  
+  // リンク
+  a({node, ...props}: RendererProps) {
+    return (
+      <a 
+        className="text-blue-600 hover:underline dark:text-blue-400" 
+        target={props.href?.startsWith('http') ? '_blank' : undefined}
+        rel={props.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+        {...props} 
+      />
+    );
+  },
+  
+  img({node, ...props}: RendererProps) {
+    return (
+      <figure className="my-6">
+        <Image 
+          src={props.src as string}
+          className="mx-auto rounded-lg"
+          width={800}
+          height={400}
+          alt={props.alt || ''}
+          {...props}        />
+        {props.alt && (
+          <figcaption className="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">
+            {props.alt}
+          </figcaption>
+        )}
+      </figure>
+    );
+  },
+  
+  // 強調（太字）
+  strong({node, ...props}: RendererProps) {
+    return <strong className="font-bold" {...props} />;
+  },
+  
+  // 強調（イタリック）
+  em({node, ...props}: RendererProps) {
+    return <em className="italic" {...props} />;
+  },
+  
+  // 水平線
+  hr({node, ...props}: RendererProps) {
+    return <hr className="my-8 border-t border-gray-300 dark:border-gray-700" {...props} />;
+  }
 };
