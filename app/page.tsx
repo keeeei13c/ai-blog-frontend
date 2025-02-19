@@ -89,6 +89,57 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+      {/* Featured Article */}
+      {featuredPost && (
+        <div className="relative py-20 bg-gradient-to-b from-blue-50 to-white">
+          <div className="container mx-auto px-4">
+            <Link href={`/article/${featuredPost.slug}`} className="group block">
+              <Card className="overflow-hidden border-none bg-white shadow-xl hover:shadow-2xl transition-all duration-300">
+                <div className="relative aspect-[21/9] overflow-hidden">
+                  <div className="absolute left-4 top-4 z-10">
+                    <Badge className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-1 text-sm">
+                      Featured
+                    </Badge>
+                  </div>
+                  <Image
+                    src={featuredPost.image}
+                    alt={featuredPost.title}
+                    width={1200}
+                    height={600}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <CardHeader className="space-y-4">
+                  <h1 className="font-serif text-4xl font-bold tracking-tight lg:text-5xl text-gray-900">
+                    {featuredPost.title}
+                  </h1>
+                  <p className="text-lg text-gray-600">
+                    {featuredPost.metaDescription}
+                  </p>
+                </CardHeader>
+                <CardFooter className="flex flex-wrap items-center gap-4">
+                  <Badge className="bg-blue-600 text-white">
+                    {featuredPost.category}
+                  </Badge>
+                  <div className="flex items-center gap-6 text-gray-500">
+                    <span className="flex items-center gap-2">
+                      <Clock className="h-4 w-4" />
+                      {featuredPost.readTime}
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      {new Date(featuredPost.date).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <Button className="ml-auto bg-blue-600 text-white hover:bg-blue-700 group-hover:translate-x-1 transition-all">
+                    Read more <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </CardFooter>
+              </Card>
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* Categories */}
       <div className="container mx-auto px-4 py-12">

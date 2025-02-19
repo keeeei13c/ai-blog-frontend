@@ -15,9 +15,9 @@ export async function fetchArticles(): Promise<Article[]> {
     const data = await response.json();
     
     // APIのレスポンスを既存の型定義に合わせる
-    return (data.data?.results || []).map((item: any) => ({
+    return (data.data?.results).map((item: any) => ({
       id: item.id,
-      slug: item.slug,
+      slug: item.slug || `article-${item.id}`,
       title: item.title,
       content: item.content,
       image: item.image,

@@ -2,16 +2,29 @@ import { Metadata } from 'next';
 import { fetchArticles, fetchArticleBySlug } from '@/services/api';
 import ArticleDetailComponent from '@/components/article/ArticleDetail';
 
+async function fetchWithRetry(fn: () => Promise<any>, retries = 3) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      console.log('Retrying fetch...', i);
+      return await fn();
+    } catch (error) {
+      if (i === retries - 1) throw error;
+      await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+    }
+  }
+}
+
 // 静的に生成するパスを定義
 export async function generateStaticParams() {
   try {
     // APIから全記事を取得
-    const articles = await fetchArticles();
+    const articles = await fetchWithRetry(() => fetchArticles());
+    console.log(articles);
     
     // 記事のスラッグをパラメータとして返す
     return articles
-      .filter((article) => Boolean(article.slug)) // slugがある記事だけフィルター
-      .map((article) => ({
+      .filter((article: { slug?: string }) => Boolean(article.slug)) // slugがある記事だけフィルター
+      .map((article: { slug: string }) => ({
         slug: article.slug as string,
       }));
   } catch (error) {
