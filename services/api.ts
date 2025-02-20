@@ -94,3 +94,25 @@ export async function fetchRelatedArticles(articleId: number): Promise<RelatedAr
     return [];
   }
 }
+
+// type CreateArticleRequest = {
+//   title: string;
+//   content: string;
+//   category: string;
+//   image: string;
+//   metaDescription: string;
+// };
+
+type CreateArticleRequest = {
+  topic?: string;
+};
+
+export const createArticle = async (articleData: CreateArticleRequest) => {
+  const response = await fetch('/api/articles', {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(articleData),
+  });
+  return response.json();
+};

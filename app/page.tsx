@@ -2,14 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Clock, Calendar, RefreshCcw, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { fetchArticles } from '../services/api';
-import { Article } from '../types/article';
-import Image from 'next/image';
+import { CreateBlogModal } from '@/components/ui/create-blog-modal-ai';
+import { fetchArticles } from '@/services/api';
+import { Article } from '@/types/article';
 
 const categoryColors: Record<string, { bg: string; text: string; hover: string }> = {
   'All': { bg: 'bg-blue-600', text: 'text-white', hover: 'hover:bg-blue-700' },
@@ -22,7 +23,7 @@ const categoryColors: Record<string, { bg: string; text: string; hover: string }
 
 const defaultColor = { bg: 'bg-blue-600', text: 'text-white', hover: 'hover:bg-blue-700' };
 
-export default function Home() {
+export default function Page() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +36,7 @@ export default function Home() {
       const data = await fetchArticles();
       setArticles(data);
     } catch (err) {
-      setError('Failed to load articles. Please try again later.');
+      setError('記事の読み込みに失敗しました。後でもう一度お試しください。');
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -66,7 +67,7 @@ export default function Home() {
               onClick={fetchArticleData}
             >
               <RefreshCcw className="mr-2 h-4 w-4" />
-              Retry
+              再試行
             </Button>
           </CardContent>
         </Card>
@@ -92,13 +93,16 @@ export default function Home() {
       {/* Featured Article */}
       {featuredPost && (
         <div className="relative py-20 bg-gradient-to-b from-blue-50 to-white">
+          <div className="absolute top-4 right-4 z-10">
+            <CreateBlogModal onSuccess={fetchArticleData} />
+          </div>
           <div className="container mx-auto px-4">
             <Link href={`/article/${featuredPost.slug}`} className="group block">
               <Card className="overflow-hidden border-none bg-white shadow-xl hover:shadow-2xl transition-all duration-300">
                 <div className="relative aspect-[21/9] overflow-hidden">
                   <div className="absolute left-4 top-4 z-10">
                     <Badge className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-1 text-sm">
-                      Featured
+                      おすすめ記事
                     </Badge>
                   </div>
                   <Image
@@ -132,7 +136,7 @@ export default function Home() {
                     </span>
                   </div>
                   <Button className="ml-auto bg-blue-600 text-white hover:bg-blue-700 group-hover:translate-x-1 transition-all">
-                    Read more <ArrowRight className="ml-2 h-4 w-4" />
+                    続きを読む <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </CardFooter>
               </Card>
@@ -207,14 +211,14 @@ export default function Home() {
           <Card className="py-16 text-center border-2 border-dashed border-gray-200">
             <CardContent>
               <p className="mb-4 text-lg text-gray-600">
-                No articles found for this category
+                このカテゴリーの記事は見つかりませんでした
               </p>
               {activeCategory !== 'All' && (
                 <Button 
                   onClick={() => setActiveCategory('All')}
                   className="bg-blue-600 text-white hover:bg-blue-700"
                 >
-                  View all articles
+                  すべての記事を表示
                 </Button>
               )}
             </CardContent>
